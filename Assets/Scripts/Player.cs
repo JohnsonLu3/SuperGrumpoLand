@@ -51,7 +51,6 @@ public class Player : MonoBehaviour
         {
             if (IsGrounded())
             {
-                print("Jump");
                 canJump = false;
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             }
@@ -61,7 +60,6 @@ public class Player : MonoBehaviour
         {
             // Right
             animator.CrossFade("Running", 0);
-            print("right");
             facingRight = true;
         }
         else if (Input.GetAxis("Horizontal") < 0)
@@ -72,7 +70,6 @@ public class Player : MonoBehaviour
                 // Rotate Grumpo
             }
 
-            print("right");
             animator.CrossFade("Running", 0);
             facingRight = false;
         }
@@ -86,6 +83,21 @@ public class Player : MonoBehaviour
         return Physics.Raycast(transform.position,
             -Vector3.up, 
             distToGround + 0.1f);
+    }
+
+    void OnCollisionEnter(Collision collision) {
+
+        GameObject obj = collision.collider.gameObject;
+        print(obj.layer + " : " + LayerMask.NameToLayer("enemy"));
+        if (obj.layer == LayerMask.NameToLayer("enemy")) {
+            Destroy(obj);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    private void OnTriggerEnter(Collider trigger)
+    {
+        Destroy(trigger.gameObject);
     }
 
 }
