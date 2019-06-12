@@ -7,18 +7,22 @@ public class Player : MonoBehaviour
     public float moveSpeed = 25;
     public float jumpForce = 8;
     public float gravity = -8;
+    public LayerMask groundLayers;
 
     private bool facingRight = true;
     private Rigidbody rb;
     private Animator animator;
     private bool canJump;
-    private LayerMask groundLayers;
+    private float distToGround;
+    private BoxCollider collider;
 
     // Use this for initialization
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        collider = GetComponent<BoxCollider>();
+        distToGround = collider.bounds.extents.y;
     } 
 
     private void Update()
@@ -45,7 +49,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            if (true)
+            if (IsGrounded())
             {
                 print("Jump");
                 canJump = false;
@@ -62,7 +66,7 @@ public class Player : MonoBehaviour
         if (Input.GetAxis("Horizontal") > 0)
         {
             // Right
-            //animator.Play("Running", 0);
+            animator.Play("Running", 0);
             print("right");
             facingRight = true;
         }
@@ -75,7 +79,7 @@ public class Player : MonoBehaviour
             }
 
             print("right");
-            //animator.Play("Running", 0);
+            animator.Play("Running", 0);
             facingRight = false;
         }
         else
@@ -86,8 +90,15 @@ public class Player : MonoBehaviour
 
     private bool IsGrounded() {
 
-        Physics.CheckBox();
-        return false;
+        Vector3 colliderBounds = new Vector3(
+                collider.bounds.center.x,
+                collider.bounds.min.y,
+                collider.bounds.center.z
+                );
+
+        return Physics.Raycast(transform.position,
+            -Vector3.up, 
+            distToGround + 0.1f);
     }
 
 }
