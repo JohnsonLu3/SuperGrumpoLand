@@ -14,15 +14,15 @@ public class Player : MonoBehaviour
     private Animator animator;
     private bool canJump;
     private float distToGround;
-    private BoxCollider collider;
+    private CapsuleCollider col;
 
     // Use this for initialization
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        collider = GetComponent<BoxCollider>();
-        distToGround = collider.bounds.extents.y;
+        col = GetComponent<CapsuleCollider>();
+        distToGround = col.bounds.extents.y;
     } 
 
     private void Update()
@@ -56,17 +56,11 @@ public class Player : MonoBehaviour
                 rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             }
         }
-       
-        else {
-
-        }
-
-
 
         if (Input.GetAxis("Horizontal") > 0)
         {
             // Right
-            animator.Play("Running", 0);
+            animator.CrossFade("Running", 0);
             print("right");
             facingRight = true;
         }
@@ -79,7 +73,7 @@ public class Player : MonoBehaviour
             }
 
             print("right");
-            animator.Play("Running", 0);
+            animator.CrossFade("Running", 0);
             facingRight = false;
         }
         else
@@ -89,13 +83,6 @@ public class Player : MonoBehaviour
     }
 
     private bool IsGrounded() {
-
-        Vector3 colliderBounds = new Vector3(
-                collider.bounds.center.x,
-                collider.bounds.min.y,
-                collider.bounds.center.z
-                );
-
         return Physics.Raycast(transform.position,
             -Vector3.up, 
             distToGround + 0.1f);
