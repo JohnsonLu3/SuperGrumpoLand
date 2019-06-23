@@ -5,16 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class Game : MonoBehaviour
 {
+
+    bool cursorLock = true;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        lockCursor();
     }
 
     // Update is called once per frame
     void Update()
     {
         checkInputs();
+        checkCursorLock();
     }
 
 
@@ -35,5 +39,34 @@ public class Game : MonoBehaviour
     void quit()
     {
         Application.Quit();
+    }
+
+    void checkCursorLock()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (cursorLock)
+            {
+                unlockCursor();
+                cursorLock = false;
+            }
+            else
+            {
+                lockCursor();
+                cursorLock = true;
+            }
+        }
+    }
+
+    void unlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+    }
+
+    void lockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 }
